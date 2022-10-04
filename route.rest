@@ -1,0 +1,6 @@
+GET http://http://localhost:5000/subscribers
+
+###
+
+Send Request
+GET hhtp://http://localhost:5000/subscribers/15
