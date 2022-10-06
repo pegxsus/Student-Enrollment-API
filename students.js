@@ -21,7 +21,9 @@ router.get('/:id', getstudent, (req, res) => {
 router.post('/', async (req, res) => {
   const student = new student({
     name: req.body.name,
-    subscribedToChannel: req.body.subscribedToChannel
+    lastname: req.body.lastname,
+    grade: req.body.grade,
+    division: req.body.division,
   })
   try {
     const newstudent = await student.save()
@@ -37,7 +39,7 @@ router.patch('/:id', getstudent, async (req, res) => {
     res.student.name = req.body.name
   }
   if (req.body.subscribedToChannel != null) {
-    res.subscriber.subscribedToChannel = req.body.subscribedToChannel
+    res.student.subscribedToChannel = req.body.subscribedToChannel
   }
   try {
     const updatedstudent = await res.student.save()
@@ -57,18 +59,18 @@ router.delete('/:id', getstudent, async (req, res) => {
   }
 })
 
-async function getSubscriber(req, res, next) {
-  let subscriber
+async function getstudent(req, res, next) {
+  let student
   try {
-    subscriber = await Subscriber.findById(req.params.id)
+    student = await Subscriber.findById(req.params.id)
     if (subscriber == null) {
-      return res.status(404).json({ message: 'Cannot find subscriber' })
+      return res.status(404).json({ message: 'Cannot find student' })
     }
   } catch (err) {
     return res.status(500).json({ message: err.message })
   }
 
-  res.subscriber = subscriber
+  res.student = student
   next()
 }
 
