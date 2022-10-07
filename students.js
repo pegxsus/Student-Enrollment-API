@@ -20,7 +20,7 @@ router.get('/:id', getstudent, (req, res) => {
 // Creating one
 router.post('/', async (req, res) => {
   const student = new student({
-    name: req.body.name,
+    firstname: req.body.firstname,
     lastname: req.body.lastname,
     grade: req.body.grade,
     division: req.body.division,
@@ -38,8 +38,8 @@ router.patch('/:id', getstudent, async (req, res) => {
   if (req.body.name != null) {
     res.student.name = req.body.name
   }
-  if (req.body.subscribedToChannel != null) {
-    res.student.subscribedToChannel = req.body.subscribedToChannel
+  if (req.body.grade != null) {
+    res.student.grade = req.body.grade
   }
   try {
     const updatedstudent = await res.student.save()
