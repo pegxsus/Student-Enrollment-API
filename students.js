@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const student = require('../models/student')
+const student = require('../api/student')
 
 // Getting all 
 router.get('/', async (req, res) => {
@@ -19,15 +19,15 @@ router.get('/:id', getstudent, (req, res) => {
 
 // Creating one
 router.post('/', async (req, res) => {
-  const student = new student({
+  const newStudent = new student({
     firstname: req.body.firstname,
     lastname: req.body.lastname,
     grade: req.body.grade,
-    division: req.body.division,
+    division: req.body.division
   })
   try {
-    const newstudent = await student.save()
-    res.status(201).json(newstudent)
+    const freshstudent = await newStudent.save()
+    res.status(201).json(freshstudent)
   } catch (err) {
     res.status(400).json({ message: err.message })
   }
@@ -62,8 +62,8 @@ router.delete('/:id', getstudent, async (req, res) => {
 async function getstudent(req, res, next) {
   let student
   try {
-    student = await Subscriber.findById(req.params.id)
-    if (subscriber == null) {
+    student = await student.findById(req.params.id)
+    if (student == null) {
       return res.status(404).json({ message: 'Cannot find student' })
     }
   } catch (err) {
