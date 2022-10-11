@@ -1,6 +1,16 @@
-GET http://http://localhost:5000/subscribers
+GET http://localhost:5000/students
+Content-Type: application/json
 
+{
+    "name": "Prakash Kumar",
+    "subscribedToChannel": "Technical Pegasus"
+}
 ###
 
-Send Request
-GET hhtp://http://localhost:5000/subscribers/15
+GET http://localhost:5000/students/2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w
+
+{
+    "name": "Prakash Kumar",
+    "subscribedToChannel": "Technical Pegasus",
+    "secondname": "Ramesh"
+}
