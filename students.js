@@ -13,12 +13,13 @@ router.get('/', async (req, res) => {
 })
 
 // Getting One
-router.get('/:id', getstudent, (req, res) => {
-  res.json(res.student)
+router.get('/:id', async (req, res) => {
+ const identity = await student.find({_id: req.params.id})
+  res.json(identity)
 })
 
 // Creating one
-router.post('/', async (req, res) => {
+router.post('/:id', async (req, res) => {
   const newStudent = new student({
     firstname: req.body.firstname,
     lastname: req.body.lastname,
@@ -34,7 +35,10 @@ router.post('/', async (req, res) => {
 })
 
 // Updating One
-router.patch('/:id', getstudent, async (req, res) => {
+router.patch('/:id', async (req, res) => {
+  const identity = await student.find({_id: req.params.id})
+  res.json(identity)
+  
   if (req.body.name != null) {
     res.student.name = req.body.name
   }
@@ -50,9 +54,9 @@ router.patch('/:id', getstudent, async (req, res) => {
 })
 
 // Deleting One
-router.delete('/:id', getstudent, async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    await res.student.remove()
+    await student.find({_id: req.params.id})
     res.json({ message: 'Deleted student' })
   } catch (err) {
     res.status(500).json({ message: err.message })
@@ -62,7 +66,7 @@ router.delete('/:id', getstudent, async (req, res) => {
 async function getstudent(req, res, next) {
   let student
   try {
-    student = await student.findById(req.params.id)
+    student = await student.find({_id: req.params.id})
     if (student == null) {
       return res.status(404).json({ message: 'Cannot find student' })
     }
