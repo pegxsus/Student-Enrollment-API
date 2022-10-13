@@ -19,10 +19,10 @@ router.get('/:id', async (req, res) => {
 })
 
 // Creating one
-router.post('/:id', async (req, res) => {
+router.post('/', async (req, res) => {
   const newStudent = new student({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     grade: req.body.grade,
     division: req.body.division
   })
@@ -35,15 +35,21 @@ router.post('/:id', async (req, res) => {
 })
 
 // Updating One
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', async (req, res, next) => {
   const identity = await student.find({_id: req.params.id})
-  res.json(identity)
+  // res.json(identity)  
   
-  if (req.body.name != null) {
-    res.student.name = req.body.name
+  if (req.body.firstName != null) {
+    res.student.firstName = req.body.firstName
+  }
+  if (req.body.lastName != null) {
+    res.student.lastName = req.body.lastName
   }
   if (req.body.grade != null) {
     res.student.grade = req.body.grade
+  }
+  if (req.body.division != null) {
+    res.student.division = req.body.division
   }
   try {
     const updatedstudent = await res.student.save()
@@ -51,20 +57,42 @@ router.patch('/:id', async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err.message })
   }
-})
+  res.json(identity)
+});
+
+// try{
+//   const id = req.params.id;
+//   const firstName = req.body.firstName;
+//   const lastName = req.body.lastName;
+//   const grade = req.body.grade;
+//   const division = req.body.division;
+//   const options = {new: true};
+
+//   const result =  await student.findByIdAndUpdate(id, firstName, lastName, grade, division, options);
+//   res.send(result);
+// } catch (error) {
+//   console.log(error.message);
+// }
+// });
 
 // Deleting One
-router.delete('/:id', async (req, res) => {
-  try {
-    await student.find({_id: req.params.id})
-    res.json({ message: 'Deleted student' })
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
+router.delete('/:id', async (req, res, next) => {
+  student.remove({_id:req.params.id})
+  .then(result =>{
+    res.status(200).json({
+      message: 'Student Deleted from Database',
+      result:result
+    })
+  })
+  .catch(err=>{
+    res.status(500).json({
+      error:err
+    })
+  })
 })
 
 async function getstudent(req, res, next) {
-  let student
+  
   try {
     student = await student.find({_id: req.params.id})
     if (student == null) {
