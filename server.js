@@ -13,7 +13,7 @@ db.on('error', (error) => console.error(error))
 app.use(express.json())
 
 const studentsRouter = require('./routes/students')
-app.use('/students', studentsRouter)
-app.use('/student', studentsRouter)
+app.use('/api/students', studentsRouter)
+app.use('/api/student', studentsRouter)
 
 app.listen(5000, () => console.log('Server Started'))
