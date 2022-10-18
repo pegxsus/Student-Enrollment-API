@@ -14,8 +14,9 @@ router.get('/', async (req, res) => {
 
 // Getting One
 router.get('/:id', async (req, res) => {
- const identity = await student.find({_id: req.params.id})
-  res.json(identity)
+ const studentinfo = await student.find({_id: req.params.id})
+  res.json(studentinfo)
+  res.send(req.query)
 })
 
 // Creating one
@@ -38,12 +39,17 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
-    res.send(student);
-  });
-});
-});
+    res.send(student)
+  })
+})
+  .catch(err=>{
+    res.status(500).json({
+      error:err
+    })
+  })
+})
 
-
+  
 // Deleting One
 router.delete('/:id', async (req, res, next) => {
   student.remove({_id:req.params.id})
@@ -60,11 +66,11 @@ router.delete('/:id', async (req, res, next) => {
 })
 
 async function getstudent(req, res, next) {
-  
+
   try {
     student = await student.find({_id: req.params.id})
     if (student == null) {
-      return res.status(404).json({ message: 'Cannot find student' })
+      return res.status(404).json({ message: 'Cannot find student from Database' })
     }
   } catch (err) {
     return res.status(500).json({ message: err.message })
@@ -73,5 +79,16 @@ async function getstudent(req, res, next) {
   res.student = student
   next()
 }
+
+// Query Parameters
+router.get('/', function(req,res){
+  var queryParameter = req.query;
+  console(queryParameter.firstName);
+  console(queryParameter.lastName);
+  console(queryParameter.grade);
+  console(queryParameter.division);
+
+  res.json(queryParameter);
+});
 
 module.exports = router
