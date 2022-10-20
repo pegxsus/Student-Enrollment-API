@@ -52,10 +52,11 @@ router.put('/:id', async (req, res, next) => {
   
 // Deleting One
 router.delete('/:id', async (req, res, next) => {
+var studentname = req.params.firstName
   student.remove({_id:req.params.id})
   .then(result =>{
     res.status(200).json({
-      message: 'Student ("firstName") Deleted from Database',
+      message: `Student ${studentname} deleted from Database`,
     })
   })
   .catch(err=>{
@@ -64,6 +65,7 @@ router.delete('/:id', async (req, res, next) => {
     })
   })
 })
+
 
 async function getstudent(req, res, next) {
 
