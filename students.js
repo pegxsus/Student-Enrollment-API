@@ -1,3 +1,4 @@
+const { response } = require('express')
 const express = require('express')
 const router = express.Router()
 const student = require('../api/student')
@@ -18,6 +19,7 @@ router.get('/:id', async (req, res) => {
   res.json(studentinfo)
   res.send(req.query)
 })
+
 
 // Creating one
 router.post('/', async (req, res) => {
@@ -52,7 +54,7 @@ router.put('/:id', async (req, res, next) => {
   
 // Deleting One
 router.delete('/:id', async (req, res, next) => {
-var studentname = req.params.firstName
+var studentname = req.params.id
   student.remove({_id:req.params.id})
   .then(result =>{
     res.status(200).json({
@@ -66,8 +68,7 @@ var studentname = req.params.firstName
   })
 })
 
-
-async function getstudent(req, res, next) {
+async function studentname(req, res, next) {
 
   try {
     student = await student.find({_id: req.params.id})
@@ -83,14 +84,37 @@ async function getstudent(req, res, next) {
 }
 
 // Query Parameters
-router.get('/', function(req,res){
-  var queryParameter = req.query;
-  console(queryParameter.firstName);
-  console(queryParameter.lastName);
-  console(queryParameter.grade);
-  console(queryParameter.division);
+// router.get('/student', function (req, res) {
+//   console.log("Name: ", req.query.firstname);
+//   console.log("Last Name:", req.query.lastName);
+//   console.log("grade:", req.query.grade);
+//   console.log("division", req.query.division);
+//   res.json();
+// });
+// router.get('/', function(req,res){
+//   // var queryParameter = req.query;
+//   let firstName = request.query.firstName
+//   if(student[firstName]){
+//     response.json(student.fetch[firstName])
+//   }else{
+//     response.json('Student not found')
+//   }
+//   })
+//   console(queryParameter.firstName);
+//   console(queryParameter.lastName);
+//   console(queryParameter.grade);
+//   console(queryParameter.division);
 
-  res.json(queryParameter);
-});
+//   res.json(queryParameter);
+// });
 
+
+// Query Parameter
+const fetchData = () => {
+  router.get(`localhost:5000/api/student/?firstName=${firstName}`).then((res) => {
+    student(res.query.firstName)
+    res.json(fetchData)
+    res.send(req.query)
+  })
+}
 module.exports = router
