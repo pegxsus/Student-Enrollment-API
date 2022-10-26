@@ -80,4 +80,22 @@ async function getstudent(req, res, next) {
   next()
 }
 
+//Query
+router.get('/', async (req, res) => {
+  try{
+    const userQuery = await req.query;
+    const filteredStudent = await student.filter((info)=>{
+      let isValid = true;
+      for(key in userQuery) {
+            isValid = isValid && info[key] === userQuery[key];
+            }
+            return isValid;
+        });
+        res.json({data: filteredStudent})
+  }catch(err){
+    res.send(err.message)
+  }
+})
+
+module.exports = router
 module.exports = router
