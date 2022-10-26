@@ -38,10 +38,11 @@ router.post('/', async (req, res) => {
 })
 
 // Updating One
+// Updating One
 router.put('/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
-    res.send(student)
+    res.send(student);
   })
 })
   .catch(err=>{
