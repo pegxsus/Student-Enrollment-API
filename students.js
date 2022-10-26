@@ -51,21 +51,16 @@ router.put('/:id', async (req, res, next) => {
   })
 })
 
-  
-// Deleting One
+//Delete by ID Method
 router.delete('/:id', async (req, res, next) => {
-var studentname = req.params.id
-  student.remove({_id:req.params.id})
-  .then(result =>{
-    res.status(200).json({
-      message: `Student ${studentname} deleted from Database`,
-    })
-  })
-  .catch(err=>{
-    res.status(500).json({
-      error:err
-    })
-  })
+  try {
+      const id = await student.find({_id: req.params.id})
+      const studentid = await student.findByIdAndDelete(id)
+      res.send(`Document with ${studentid.firstName} has been deleted..`)
+  }
+  catch (error) {
+      res.status(400).json({ message: error.message })
+  }
 })
 
 async function studentname(req, res, next) {
