@@ -2,6 +2,7 @@ const { response } = require('express')
 const express = require('express')
 const router = express.Router()
 const student = require('../api/student')
+// const data = require('./api/student')
 
 // Getting all 
 router.get('/', async (req, res) => {
@@ -13,11 +14,14 @@ router.get('/', async (req, res) => {
   }
 })
 
-// Getting One
+// Getting a single student 
 router.get('/:id', async (req, res) => {
- const studentinfo = await student.find({_id: req.params.id})
-  res.json(studentinfo)
-  res.send(req.query)
+  try {
+    const studentinfo = await student.find({_id: req.params.id})
+    res.send(`The student associated with the ID is ${studentinfo.firstName}`)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
+  }
 })
 
 
@@ -38,17 +42,14 @@ router.post('/', async (req, res) => {
 })
 
 // Updating One
-// Updating One
 router.put('/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
-    res.send(student);
+    res.send(`Document of ${student.firstName} has been Updated`)
   })
 })
   .catch(err=>{
-    res.status(500).json({
-      error:err
-    })
+    res.status(500).json({error:err })
   })
 })
 
@@ -57,14 +58,14 @@ router.delete('/:id', async (req, res, next) => {
   try {
       const id = await student.find({_id: req.params.id})
       const studentid = await student.findByIdAndDelete(id)
-      res.send(`Document with ${studentid.firstName} has been deleted..`)
+      res.send(`Document with ${studentid.firstName} has been deleted`)
   }
   catch (error) {
       res.status(400).json({ message: error.message })
   }
 })
 
-async function studentname(req, res, next) {
+async function getstudent(req, res, next) {
 
   try {
     student = await student.find({_id: req.params.id})
@@ -79,38 +80,4 @@ async function studentname(req, res, next) {
   next()
 }
 
-// Query Parameters
-// router.get('/student', function (req, res) {
-//   console.log("Name: ", req.query.firstname);
-//   console.log("Last Name:", req.query.lastName);
-//   console.log("grade:", req.query.grade);
-//   console.log("division", req.query.division);
-//   res.json();
-// });
-// router.get('/', function(req,res){
-//   // var queryParameter = req.query;
-//   let firstName = request.query.firstName
-//   if(student[firstName]){
-//     response.json(student.fetch[firstName])
-//   }else{
-//     response.json('Student not found')
-//   }
-//   })
-//   console(queryParameter.firstName);
-//   console(queryParameter.lastName);
-//   console(queryParameter.grade);
-//   console(queryParameter.division);
-
-//   res.json(queryParameter);
-// });
-
-
-// Query Parameter
-const fetchData = () => {
-  router.get(`localhost:5000/api/student/?firstName=${firstName}`).then((res) => {
-    student(res.query.firstName)
-    res.json(fetchData)
-    res.send(req.query)
-  })
-}
 module.exports = router
