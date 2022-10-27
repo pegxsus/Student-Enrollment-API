@@ -1,8 +1,6 @@
-const { response } = require('express')
 const express = require('express')
 const router = express.Router()
 const student = require('../api/student')
-// const data = require('./api/student')
 
 // Getting all 
 router.get('/', async (req, res) => {
@@ -17,13 +15,12 @@ router.get('/', async (req, res) => {
 // Getting a single student 
 router.get('/:id', async (req, res) => {
   try {
-    const studentinfo = await student.find({_id: req.params.id})
-    res.send(`The student associated with the ID is ${studentinfo.firstName}`)
+    const studentinfo = await student.findById({_id: req.params.id}, req.body)
+    res.send(`The student associated with the ID is ${studentinfo.firstName} ${studentinfo.lastName}`)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
 })
-
 
 // Creating one
 router.post('/', async (req, res) => {
@@ -45,7 +42,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
-    res.send(`Document of ${student.firstName} has been Updated`)
+    res.send(`Document of ${student.firstName} ${student.lastName} has been Updated.`)
   })
 })
   .catch(err=>{
@@ -56,46 +53,40 @@ router.put('/:id', async (req, res, next) => {
 //Delete by ID Method
 router.delete('/:id', async (req, res, next) => {
   try {
-      const id = await student.find({_id: req.params.id})
       const studentid = await student.findByIdAndDelete(id)
-      res.send(`Document with ${studentid.firstName} has been deleted`)
+      res.send(`Document of ${studentid.firstName} ${studentid.lastName} has been deleted`)
   }
   catch (error) {
       res.status(400).json({ message: error.message })
   }
 })
 
-async function getstudent(req, res, next) {
 
-  try {
-    student = await student.find({_id: req.params.id})
-    if (student == null) {
-      return res.status(404).json({ message: 'Cannot find student from Database' })
+// Query Params
+router.get('/:key', async (req, res) => {
+  const data = await student.find(
+    {
+        "$or":[
+          {firstName:{$regex:req.params.key}},
+          {lastName:{$regex:req.params.key}},
+          {grade:{$regex:req.params.key}},
+          {division:{$regex:req.params.key}},  
+        ]
     }
-  } catch (err) {
-    return res.status(500).json({ message: err.message })
-  }
+)
+res.send(data);
 
-  res.student = student
-  next()
-}
+})
 
-//Query
+// Query Limit student Data
 router.get('/', async (req, res) => {
   try{
-    const userQuery = await req.query;
-    const filteredStudent = await student.filter((info)=>{
-      let isValid = true;
-      for(key in userQuery) {
-            isValid = isValid && info[key] === userQuery[key];
-            }
-            return isValid;
-        });
+    const userQuery =  req.query
+    const filteredStudent = await student.limit(2)
         res.json({data: filteredStudent})
   }catch(err){
     res.send(err.message)
   }
 })
 
-module.exports = router
 module.exports = router
