@@ -13,14 +13,25 @@ router.get('/', async (req, res) => {
 })
 
 // Getting a single student 
+// router.get('/:id', async (req, res) => {
+//   try {
+//     const studentinfo = await student.findById({_id: req.params.id}, req.body)
+//     res.send(`The student associated with the ID is ${studentinfo.firstName} ${studentinfo.lastName}`)
+//   } catch (err) {
+//     res.status(500).json({ message: err.message })
+//   }
+// })
 router.get('/:id', async (req, res) => {
-  try {
-    const studentinfo = await student.findById({_id: req.params.id}, req.body)
-    res.send(`The student associated with the ID is ${studentinfo.firstName} ${studentinfo.lastName}`)
+  try{
+  const identity = await student.find({_id: req.params.id})
+   res.json(identity)
+  const studentInfo = await student.find({_id: req.params.id}, req.body)
+   res.send(studentInfo)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
-})
+ })
+ 
 
 // Creating one
 router.post('/', async (req, res) => {
@@ -42,7 +53,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
-    res.send(`Document of ${student.firstName} ${student.lastName} has been Updated.`)
+    res.send(`student with ID ${student._id} has been Updated.`)
   })
 })
   .catch(err=>{
@@ -53,8 +64,8 @@ router.put('/:id', async (req, res, next) => {
 //Delete by ID Method
 router.delete('/:id', async (req, res, next) => {
   try {
-      const studentid = await student.findByIdAndDelete(id)
-      res.send(`Document of ${studentid.firstName} ${studentid.lastName} has been deleted`)
+      const studentId = await student.findByIdAndDelete(id)
+      res.send(`Document of ${studentId.firstName} ${studentId.lastName} has been deleted`)
   }
   catch (error) {
       res.status(400).json({ message: error.message })
