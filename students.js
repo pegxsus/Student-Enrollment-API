@@ -12,25 +12,16 @@ router.get('/', async (req, res) => {
   }
 })
 
-// Getting a single student 
-// router.get('/:id', async (req, res) => {
-//   try {
-//     const studentinfo = await student.findById({_id: req.params.id}, req.body)
-//     res.send(`The student associated with the ID is ${studentinfo.firstName} ${studentinfo.lastName}`)
-//   } catch (err) {
-//     res.status(500).json({ message: err.message })
-//   }
-// })
+// Getting a single student
 router.get('/:id', async (req, res) => {
   try{
-  const identity = await student.find({_id: req.params.id})
-   res.json(identity)
-  const studentInfo = await student.find({_id: req.params.id}, req.body)
+  const studentInfo = await student.findById(req.params.id)
+  res.send(`The Required student details are:`)
    res.send(studentInfo)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
- })
+ }) 
  
 
 // Creating one
