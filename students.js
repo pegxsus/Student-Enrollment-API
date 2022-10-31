@@ -65,20 +65,28 @@ router.delete('/:id', async (req, res, next) => {
 
 
 // Query Params
-router.get('/:key', async (req, res) => {
-  const data = await student.find(
-    {
-        "$or":[
-          {firstName:{$regex:req.params.key}},
-          {lastName:{$regex:req.params.key}},
-          {grade:{$regex:req.params.key}},
-          {division:{$regex:req.params.key}},  
-        ]
-    }
-)
-res.send(data);
+router.get('/posts',authenticate, async (req,res) => {
+  //const _ispublished = req.query.published;
+  const match = {}
 
+  if(req.query.student){
+      match.student = req.query.student === 'true'
+  }
+  try {
+      await req.student.populate({
+          path:'students',
+          match,
+          options:{
+              limit: parseInt(req.query.limit),
+              skip: parseInt(req.query.skip)
+          }
+      }).execPopulate()
+      res.send(req.student.posts)
+  } catch (error) {
+      res.status(500).send()
+  }
 })
+
 
 // Query Limit student Data
 const fetchstudent = async (req, res) => {
