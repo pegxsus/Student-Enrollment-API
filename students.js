@@ -81,14 +81,30 @@ res.send(data);
 })
 
 // Query Limit student Data
-router.get('/', async (req, res) => {
-  try{
-    const userQuery =  req.query
-    const filteredStudent = await student.limit(2)
-        res.json({data: filteredStudent})
-  }catch(err){
-    res.send(err.message)
+const fetchCompanies = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit)
+    const offset = parseInt(req.query.skip)
+    const studentCollection = await student.find()
+      .skip(offset)
+      .limit(limit)
+    const studentCollectionCount = await student.count()
+    const totalPages = Math.ceil(student / limit)
+    const currentPage = Math.ceil(student % offset)
+    res.status(200).send({
+      data: studentCollection,
+      paging: {
+        total: studentCollectionCount,
+        page: currentPage,
+        pages: totalPages,
+      },
+    })
+  } catch (err) {
+    console.log("Error", e)
+    res.status(500).send({
+      data: null,
+    })
   }
-})
+}
 
 module.exports = router
