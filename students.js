@@ -81,7 +81,7 @@ res.send(data);
 })
 
 // Query Limit student Data
-const fetchCompanies = async (req, res) => {
+const fetchstudent = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit)
     const offset = parseInt(req.query.skip)
