@@ -89,30 +89,18 @@ router.get('/posts',authenticate, async (req,res) => {
 
 
 // Query Limit student Data
-const fetchstudent = async (req, res) => {
-  try {
-    const limit = parseInt(req.query.limit)
-    const offset = parseInt(req.query.skip)
-    const studentCollection = await student.find()
-      .skip(offset)
-      .limit(limit)
-    const studentCollectionCount = await student.count()
-    const totalPages = Math.ceil(student / limit)
-    const currentPage = Math.ceil(student % offset)
-    res.status(200).send({
-      data: studentCollection,
-      paging: {
-        total: studentCollectionCount,
-        page: currentPage,
-        pages: totalPages,
-      },
-    })
-  } catch (err) {
-    console.log("Error", e)
-    res.status(500).send({
-      data: null,
-    })
-  }
+router.get('/', (req, res) => {
+const page = req.query.page
+const limit = req.query.limit
+
+const startIndex = (page - 1 ) * limit
+const endIndex = page * limit
+
+const results = {}
+
+results.results = student.slice(startIndex, endIndex)
+res.json(results)
+})
 }
 
 module.exports = router
