@@ -65,42 +65,41 @@ router.delete('/:id', async (req, res, next) => {
 
 
 // Query Params
-router.get('/posts',authenticate, async (req,res) => {
-  //const _ispublished = req.query.published;
-  const match = {}
-
-  if(req.query.student){
-      match.student = req.query.student === 'true'
+router.get('/', paginatedResults(student), (req, res) => {
+    res.json(res.paginatedResults)
+  })
+  
+  function paginatedResults(model) {
+    return async (req, res, next) => {
+      const pageSize = parseInt(req.query.pageSize)
+      const pageNumber = parseInt(req.query.pageNumber)
+  
+      const startIndex = (pageSize - 1) * limit
+      const endIndex = pageSize * limit
+  
+      const results = {}
+  
+      if (endIndex < await model.countDocuments().exec()) {
+        results.next = {
+          pageSize: pageSize + 1,
+          pageNumber: pageNumber
+        }
+      }
+      
+      if (startIndex > 0) {
+        results.previous = {
+          pageSize: page - 1,
+          pageNumber: pageNumber
+        }
+      }
+      try {
+        results.results = await model.find().pageNumber(pageNumber).skip(startIndex).exec()
+        res.paginatedResults = results
+        next()
+      } catch (e) {
+        res.status(500).json({ message: e.message })
+      }
+    }
   }
-  try {
-      await req.student.populate({
-          path:'students',
-          match,
-          options:{
-              limit: parseInt(req.query.limit),
-              skip: parseInt(req.query.skip)
-          }
-      }).execPopulate()
-      res.send(req.student.posts)
-  } catch (error) {
-      res.status(500).send()
-  }
-})
-
-
-// Query Limit student Data
-router.get('/', (req, res) => {
-const page = req.query.page
-const limit = req.query.limit
-
-const startIndex = (page - 1 ) * limit
-const endIndex = page * limit
-
-const results = {}
-
-results.results = student.slice(startIndex, endIndex)
-res.json(results)
-})
-}
 
 module.exports = router
