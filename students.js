@@ -3,26 +3,19 @@ const router = express.Router()
 const student = require('../api/student')
 
 // Getting all 
-// router.get('/', async (req, res) => {
-//   try {
-//     const students = await student.find()
-//     res.json(students)
-//   } catch (err) {
-//     res.status(500).json({ message: err.message })
-//   }
-// })
 router.get('/', async (req, res) => {
   try {
-      // Adding Pagination
-      const limitValue = req.query.limit || 2;
-      const skipValue = req.query.skip || 2;
-      const posts = await student.find()
-          .limit(limitValue).skip(skipValue);
-      res.status(200).send(posts);
-  } catch (e) {
-      console.log(e);
+    const pageSize = req.query.pageSize 
+    const pageNumber = req.query.pageNumber 
+    const firstName =req.query.firstName
+    const posts = await student.find()
+      .limit(parseInt(pageSize))
+      .skip(parseInt(pageNumber))
+      res.status(200).send(posts)
+  } catch (err) {
+    res.status(500).json({ message: err.message })
   }
-});
+})
 
 // Getting a single student
 router.get('/:id', async (req, res) => {
