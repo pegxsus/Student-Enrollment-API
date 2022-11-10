@@ -2,13 +2,16 @@ const express = require('express')
 const router = express.Router()
 const student = require('../api/student')
 
-// Getting all 
+// Getting all Pagination and Query
 router.get('/', async (req, res) => {
   try {
+    req.query.firstName
+    req.query.lastName
+    req.query.grade
+    req.query.division
     const pageSize = req.query.pageSize 
     const pageNumber = req.query.pageNumber 
-    const firstName =req.query.firstName
-    const posts = await student.find()
+    const posts = await student.find(req.query)
       .limit(parseInt(pageSize))
       .skip(parseInt(pageNumber))
       res.status(200).send(posts)
@@ -16,6 +19,7 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 })
+
 
 // Getting a single student
 router.get('/:id', async (req, res) => {
