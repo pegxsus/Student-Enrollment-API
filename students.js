@@ -5,16 +5,22 @@ const student = require('../api/student')
 // Getting all Pagination and Query
 router.get('/', async (req, res) => {
   try {
-    req.query.firstName
-    req.query.lastName
-    req.query.grade
-    req.query.division
-    const pageSize = req.query.pageSize 
-    const pageNumber = req.query.pageNumber 
-    const posts = await student.find(req.query)
-      .limit(parseInt(pageSize))
-      .skip(parseInt(pageNumber))
-      res.status(200).send(posts)
+//     req.query.firstName
+//     req.query.lastName
+//     req.query.grade
+//     req.query.division
+//     const pageSize = req.query.pageSize 
+//     const pageNumber = req.query.pageNumber 
+//     const posts = await student.find(req.query)
+//       .limit(parseInt(pageSize))
+//       .skip(parseInt(pageNumber))
+//       res.status(200).send(posts)
+const { pageSize = 100, pageNumber = 1 } = req.query
+const studentPaginate = await student.find()
+.limit(parseInt(pageSize))
+.skip(parseInt(pageNumber))
+res.status(200).send( studentPaginate )
+console.log(studentPaginate)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
