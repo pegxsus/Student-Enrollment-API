@@ -6,7 +6,7 @@ const student = require('../api/student')
 router.get('/', async (req, res) => {
   try {
 const pageSize = parseInt(req.query.pageSize) || 0
-const pageNumber = parseInt(req.query.pageNumber) || 0
+const pageNumber = parseInt(req.query.pageNumber) || 1
 let queryCondition = {}
 for (const [key, value] of Object.entries(req.query)) {
   if (['firstName', 'lastName', 'grade', 'division'].includes(key)) {
