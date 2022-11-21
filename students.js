@@ -5,12 +5,12 @@ const student = require('../api/student')
 // Getting all Pagination and Query
 router.get('/', async (req, res) => {
   try {
-const pageSize = parseInt(req.query.pageSize) || 0
-const pageNumber = parseInt(req.query.pageNumber) || 1
-let queryCondition = {}
-for (const [key, value] of Object.entries(req.query)) {
+  const pageSize = parseInt(req.query.pageSize) || 0
+  const pageNumber = parseInt(req.query.pageNumber) || 1
+  let queryCondition = {}
+  for (const [key, value] of Object.entries(req.query)) {
   if (['firstName', 'lastName', 'grade', 'division'].includes(key)) {
-    queryCondition[key] = value
+  queryCondition[key] = value
   }
 }
 const queries = queryCondition
