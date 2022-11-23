@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const student = require('../api/student')
+const Student = require('../api/student')
 
 // Getting all Pagination and Query
 router.get('/', async (req, res) => {
@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
   }
 }
 const queries = queryCondition
-const studentPagination = await student
+const studentPagination = await Student
   .find(queries)
   .limit(pageSize)
   .skip(pageNumber - 1)
@@ -27,7 +27,7 @@ const studentPagination = await student
 // Getting a single student
 router.get('/:id', async (req, res) => {
   try{
-  const studentInfo = await student.findById(req.params.id)
+  const studentInfo = await Student.findById(req.params.id)
   res.send(`The Required student details are:`)
    res.send(studentInfo)
   } catch (err) {
@@ -38,7 +38,7 @@ router.get('/:id', async (req, res) => {
 
 // Creating one
 router.post('/', async (req, res) => {
-  const newStudent = new student({
+  const newStudent = new Student({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     grade: req.body.grade,
@@ -54,8 +54,8 @@ router.post('/', async (req, res) => {
 
 // Updating One
 router.put('/:id', async (req, res, next) => {
-  student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
-    student.findOne({_id: req.params.id}).then(function(student){
+  Student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
+    Student.findOne({_id: req.params.id}).then(function(student){
     res.send(`student with ID ${student._id} has been Updated.`)
   })
 })
@@ -67,7 +67,7 @@ router.put('/:id', async (req, res, next) => {
 //Delete by ID Method
 router.delete('/:id', async (req, res, next) => {
   try {
-      const studentId = await student.findByIdAndDelete(id)
+      const studentId = await Student.findByIdAndDelete(id)
       res.send(`Document of ${studentId.firstName} ${studentId.lastName} has been deleted`)
   }
   catch (error) {
@@ -77,7 +77,7 @@ router.delete('/:id', async (req, res, next) => {
 
 
 // Query Params
-router.get('/', paginatedResults(student), (req, res) => {
+router.get('/', paginatedResults(Student), (req, res) => {
     res.json(res.paginatedResults)
   })
   
