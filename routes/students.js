@@ -1,24 +1,30 @@
 const express = require('express')
 const router = express.Router()
 const student = require('../api/student')
-
+const queryCondition = require('../utils/logic')
 
 // Getting all Pagination and Query
 router.get('/', async (req, res) => {
   try {
-  const pageSize = parseInt(req.query.pageSize) || 0
-  const pageNumber = parseInt(req.query.pageNumber) || 1
-const queryCondition = require('../utils/logic')
-const posts = await student
-  .find(queryCondition)
-  .limit(pageSize)
-  .skip(pageNumber - 1)
-  res.status(200).send(posts)
-  } catch (err) {
-    res.status(500).json({ message: err.message })
-  }
-})
-
+    const pageSize = parseInt(req.query.pageSize) || 0
+    const pageNumber = parseInt(req.query.pageNumber) || 1
+    let queryCondition = {}
+    for (const [key, value] of Object.entries(req.query)) {
+      if (['firstName', 'lastName', 'grade', 'division'].includes(key)) {
+        queryCondition[key] = value
+      }
+    }
+    const queries = queryCondition
+    const posts = await student
+      .find(queries)
+      .limit(pageSize)
+      .skip(pageNumber - 1)
+      res.status(200).send(posts)
+      } catch (err) {
+        res.status(500).json({ message: err.message })
+      }
+    })
+    
 // Getting a single student
 router.get('/:id', async (req, res) => {
   try{
