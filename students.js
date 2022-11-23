@@ -14,11 +14,11 @@ router.get('/', async (req, res) => {
   }
 }
 const queries = queryCondition
-const posts = await student
+const studentPagination = await student
   .find(queries)
   .limit(pageSize)
   .skip(pageNumber - 1)
-  res.status(200).send(posts)
+  res.status(200).send(studentPagination)
   } catch (err) {
     res.status(500).json({ message: err.message })
   }
