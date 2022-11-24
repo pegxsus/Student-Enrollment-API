@@ -31,7 +31,7 @@ router.get('/student/:id', async (req, res) => {
   const studentInfo = await student.findById(req.params.id)
    res.send(studentInfo)
   } catch (err) {
-    res.status(500).json({ message: err.message })
+    res.status(500).json(`Student database not found`)
   }
  }) 
 
@@ -71,7 +71,7 @@ router.delete('/student/:id', async (req, res, next) => {
       res.send(`Student with the name ${studentId.firstName} ${studentId.lastName} has been deleted`)
   }
   catch (error) {
-      res.status(400).json({ message: error.message })
+      res.status(400).json(`Student database not found`)
   }
 })
 

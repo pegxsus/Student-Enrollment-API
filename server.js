@@ -8,7 +8,7 @@ const connection = require('./config/dbConnection')
 const db = mongoose.connection
 const PORT = 5000
 const dotenv = require("dotenv")
-const student = require('./api/student')
+
 
 dotenv.config()
 
