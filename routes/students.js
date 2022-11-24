@@ -7,23 +7,18 @@ const queryCondition = require('../utils/logic')
 router.get('/', async (req, res) => {
   try {
     const pageSize = parseInt(req.query.pageSize) || 0
-    const pageNumber = parseInt(req.query.pageNumber) || 1
-    let queryCondition = {}
-    for (const [key, value] of Object.entries(req.query)) {
-      if (['firstName', 'lastName', 'grade', 'division'].includes(key)) {
-        queryCondition[key] = value
-      }
-    }
-    const queries = queryCondition
-    const posts = await student
+    const pageNumber = parseInt(req.query.pageNumber) || 1 
+    const queries = queryCondition(req.query)
+    const students = await student
       .find(queries)
       .limit(pageSize)
       .skip(pageNumber - 1)
-      res.status(200).send(posts)
+      res.status(200).send(students)
       } catch (err) {
         res.status(500).json({ message: err.message })
       }
     })
+    
     
 // Getting a single student
 router.get('/student/:id', async (req, res) => {
