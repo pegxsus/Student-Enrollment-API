@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
     })
     
 // Getting a single student
-router.get('/:id', async (req, res) => {
+router.get('/student/:id', async (req, res) => {
   try{
   const studentInfo = await student.findById(req.params.id)
    res.send(studentInfo)
@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
 })
 
 // Updating One
-router.put('/:id', async (req, res, next) => {
+router.put('/student/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
     res.send(`student with ID ${student._id} has been Updated.`)
@@ -65,7 +65,7 @@ router.put('/:id', async (req, res, next) => {
 })
 
 //Delete by ID Method
-router.delete('/:id', async (req, res, next) => {
+router.delete('/student/:id', async (req, res, next) => {
   try {
       const studentId = await student.findByIdAndDelete(req.params.id)
       res.send(`Student with the name ${studentId.firstName} ${studentId.lastName} has been deleted`)
