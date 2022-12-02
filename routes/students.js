@@ -7,21 +7,15 @@ const queryCondition = require('../utils/logic')
 router.get('/', async (req, res) => {
   try {
     const pageSize = parseInt(req.query.pageSize) || 0
-    const pageNumber = parseInt(req.query.pageNumber) || 1
-    let queryCondition = {}
-    for (const [key, value] of Object.entries(req.query)) {
-      if (['firstName', 'lastName', 'grade', 'division'].includes(key)) {
-        queryCondition[key] = value
-      }
-    }
-    const queries = queryCondition
-    const posts = await student
+    const pageNumber = parseInt(req.query.pageNumber) || 1 
+    const queries = queryCondition(req.query)
+    const students = await student
       .find(queries)
       .limit(pageSize)
       .skip(pageNumber - 1)
-      res.status(200).send(posts)
+      res.status(200).send(students)
       } catch (err) {
-        res.status(500).json({ message: err.message })
+        res.status(500).json(`The input enpoint URL is not valid!`)
       }
     })
     
@@ -31,11 +25,10 @@ router.get('/student/:id', async (req, res) => {
   const studentInfo = await student.findById(req.params.id)
    res.send(studentInfo)
   } catch (err) {
-    res.status(500).json(`Student database not found`)
+    res.status(500).json(`Student database not found!`)
   }
  }) 
 
- 
 // Creating one
 router.post('/', async (req, res) => {
   const newStudent = new student({
@@ -48,7 +41,7 @@ router.post('/', async (req, res) => {
     const freshstudent = await newStudent.save()
     res.status(201).json(freshstudent)
   } catch (err) {
-    res.status(400).json({ message: err.message })
+    res.status(400).json(`Student Database not found!`)
   }
 })
 
@@ -71,10 +64,13 @@ router.delete('/student/:id', async (req, res, next) => {
       res.send(`Student with the name ${studentId.firstName} ${studentId.lastName} has been deleted`)
   }
   catch (error) {
-      res.status(400).json(`Student database not found`)
+      res.status(400).json(`Student database not found!`)
   }
 })
 
-
+// Error Catch
+router.get('/student', async (req, res) => {
+  res.status(500).json('Invalid URL endpoint!')
+  })
 
 module.exports = router

@@ -1,6 +1,6 @@
 const queryCondition = (queryParams) => {
     let queryCondition = {}
-    for (const [key, value] of Object.enteries(queryParams)) {
+    for (const [key, value] of Object.entries(queryParams)) {
         if (['firstName', 'lastName', 'grade', 'division'].includes(key)) {
             queryCondition[key] = value
         }
