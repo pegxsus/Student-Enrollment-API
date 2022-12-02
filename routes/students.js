@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
       .skip(pageNumber - 1)
       res.status(200).send(students)
       } catch (err) {
-        res.status(500).json(`The input enpoint URL is not valid!`)
+        res.status(400).json(`The input enpoint URL is not valid!`)
       }
     })
     
@@ -25,7 +25,7 @@ router.get('/student/:id', async (req, res) => {
   const studentInfo = await student.findById(req.params.id)
    res.send(studentInfo)
   } catch (err) {
-    res.status(500).json(`Student database not found!`)
+    res.status(400).json(`Student database not found!`)
   }
  }) 
 
@@ -53,7 +53,7 @@ router.put('/student/:id', async (req, res, next) => {
   })
 })
   .catch(err=>{
-    res.status(500).json({error:err })
+    res.status(400).json({error:'The input URL is incorrect!' })
   })
 })
 
@@ -70,7 +70,18 @@ router.delete('/student/:id', async (req, res, next) => {
 
 // Error Catch
 router.get('/student', async (req, res) => {
-  res.status(500).json('Invalid URL endpoint!')
+  res.status(400).json('Invalid URL endpoint!')
   })
+
+router.get('/students', async (req, res) => {
+    res.status(400).json('Invalid URL endpoint!')
+    
+  })
+
+router.get('/:id', async (req, res) => {
+    res.status(400).json('Invalid URL endpoint!')
+    
+  })
+
 
 module.exports = router

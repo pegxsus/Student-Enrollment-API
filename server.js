@@ -18,6 +18,7 @@ app.use(express.json())
 
 app.use('/api/students', studentRouter)
 app.use('/api', studentRouter)
+app.use('/', studentRouter)
 
 
 app.listen(PORT, () => console.log('Server Started'))
