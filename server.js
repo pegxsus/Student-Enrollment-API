@@ -3,15 +3,17 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-
-mongoose.connect('mongodb+srv://Pegasusx10:pegasus123@cluster0.749smlf.mongodb.net/student-database?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true })
+const studentRouter = require('./routes/students')
+const connection = require('./config/dbConnection')
 const db = mongoose.connection
+const PORT = 5000
+const dotenv = require("dotenv")
+dotenv.config()
 db.on('error', (error) => console.error(error))
-// db.once('open', () => console.log('Connected to Database'))
 
 app.use(express.json())
 
-const studentsRouter = require('./routes/students')
-app.use('/students', studentsRouter)
+app.use('/api/students', studentRouter)
+app.use('/api/student', studentRouter)
 
-app.listen(5000, () => console.log('Server Started'))
+app.listen(PORT, () => console.log('Server Started'))
