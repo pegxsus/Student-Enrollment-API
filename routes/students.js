@@ -22,10 +22,10 @@ router.get('/', async (req, res) => {
 // Getting a single student
 router.get('/student/:id', async (req, res) => {
   try{
-  const studentInfo = await student.findById(req.params.id)
+  const studentInfo = await student.findById(req.params.id).populate('course')
    res.send(studentInfo)
   } catch (err) {
-    res.status(400).json(`Student database not found!`)
+    res.status(401).json(`Student database not found!`)
   }
  }) 
 
@@ -35,13 +35,14 @@ router.post('/', async (req, res) => {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     grade: req.body.grade,
-    division: req.body.division
+    division: req.body.division,
+   enrolledCourses: req.body.enrolledCourses
   })
   try {
     const freshstudent = await newStudent.save()
     res.status(201).json(freshstudent)
   } catch (err) {
-    res.status(400).json(`Student Database not found!`)
+    res.status(401).json(`Student Database not found!`)
   }
 })
 
@@ -53,7 +54,7 @@ router.put('/student/:id', async (req, res, next) => {
   })
 })
   .catch(err=>{
-    res.status(400).json({error:'The input URL is incorrect!' })
+    res.status(401).json({error:'The input URL is incorrect!' })
   })
 })
 
@@ -64,24 +65,24 @@ router.delete('/student/:id', async (req, res, next) => {
       res.send(`Student with the name ${studentId.firstName} ${studentId.lastName} has been deleted`)
   }
   catch (error) {
-      res.status(400).json(`Student database not found!`)
+      res.status(401).json(`Student database not found!`)
   }
 })
 
 // Error Catch
-router.get('/student', async (req, res) => {
-  res.status(400).json('Invalid URL endpoint!')
-  })
+// router.get('/student', async (req, res) => {
+//   res.status(401).json('Invalid URL endpoint!')
+//   })
 
-router.get('/students', async (req, res) => {
-    res.status(400).json('Invalid URL endpoint!')
+// router.get('/students', async (req, res) => {
+//     res.status(401).json('Invalid URL endpoint!')
     
-  })
+//   })
 
-router.get('/:id', async (req, res) => {
-    res.status(400).json('Invalid URL endpoint!')
+// router.get('/:id', async (req, res) => {
+//     res.status(401).json('Invalid URL endpoint!')
     
-  })
+//   })
 
 
 module.exports = router

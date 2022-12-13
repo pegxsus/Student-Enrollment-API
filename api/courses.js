@@ -6,7 +6,7 @@ const coursesSchema = new mongoose.Schema({
     required: true
   },
   isElective: {
-    type: String,
+    type: Boolean,
     required: true
   },
   teacher: {
