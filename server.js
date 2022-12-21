@@ -18,11 +18,27 @@ db.on('error', (error) => console.error(error))
 app.use(express.json())
 
 app.use('/api/students', studentRouter)
-app.use('/api', studentRouter)
-app.use('/', studentRouter)
+// app.use('/api', studentRouter)
+// app.use('/', studentRouter)
+app.use('localhost:5000', studentRouter)
 app.use ('/', coursesRouter)
 app.use('/api/courses', coursesRouter)
 app.use('/api', coursesRouter)
 
+app.use('*', (req,res) => {
+    const err = new Error(`Requested URL is Invalid!`)
+    res.status(404).json({        
+        message: err.message,
+        log: err.stack
+    })
+})
+
+app.use((err, req, res, next) => {
+    const statusCode = err.statusCode || 500
+    res.status(statusCode).json({        
+        message: err.message
+        // log: err.stack
+    })
+})
 
 app.listen(PORT, () => console.log('Server Started'))

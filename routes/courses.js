@@ -1,6 +1,7 @@
+
 const express = require('express')
 const router = express.Router()
-const courses = require('../api/courses')
+const courses = require('./courses')
 
 // Getting all 
 router.get('/', async (req, res) => {
