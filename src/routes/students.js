@@ -3,7 +3,7 @@ const router = express.Router()
 const student = require('../models/student')
 const courses = require('../models/courses')
 const queryCondition = require('../utils/logic')
-const error = require('../error_handler/error')
+const error = require('../controller/error_handler/error')
 
 // Getting all Pagination and Query
 router.get('/', async (req, res, next) => {
@@ -15,19 +15,20 @@ router.get('/', async (req, res, next) => {
       .find(queries)
       .limit(pageSize)
       .skip(pageNumber - 1)
+      .populate('enrolledCourses')
       res.status(200).send(students)
-    } catch (e) {
+    } catch (err) {
       next(err)
     }
     })
     
 // Getting a single student
-router.get('/student/:id', async (req, res, next) => {
+router.get('/student/:id', async (req, res) => {
   try{
   const studentInfo = await student.findById(req.params.id)
    res.send(studentInfo)
-  } catch (e) {
-    next(err)
+  } catch (err) {
+    res.status(401).json(`Student database not found!`)
   }
  }) 
 
@@ -43,10 +44,8 @@ router.post('/', async (req, res, next) => {
   
   try {
     const freshstudent = await newStudent
-    .populate('enrolledCourses')
     res.status(201).json(freshstudent)
-        // const student = await Student.findByIdAndUpdate(req.params.studentId, { $push: { enrolledCourses: req.body.courseId } }, { new: true });
-      //  res.send(student);
+    .save()
     } catch (e) {
       next(err)
     }
@@ -54,17 +53,17 @@ router.post('/', async (req, res, next) => {
 
 //   try {
 //     const students = await newStudent.findById(req.params.id);
-//     students.courses.push(req.body.id);
+//     student.courses.push(req.body.id);
   
-//     if (students.courses.length > 4) {
+//     if (student.courses.length > 4) {
 //       res.status(400).send({ error: 'A student can only enroll in up to 4 courses.' });
 //       return;
 //     }
 
-//     await students.save();
+//     await student.save();
 //     res.send(students);
-//   } catch (error) {
-//     handleError(err, res)
+//   } catch (e) {
+//     next(err)
 //   }
 // });
 
@@ -72,7 +71,7 @@ router.post('/', async (req, res, next) => {
 router.put('/student/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
-    res.send(`student with ID ${student._id} has been Updated.`)
+    res.send(`student with the ID ${student._id} has been Updated successfully.`)
   })
 })
   .catch(err=>{
