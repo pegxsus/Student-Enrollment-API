@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const student = require('../models/student')
-const courses = require('../models/courses')
 const queryCondition = require('../utils/logic')
-const error = require('../controller/error_handler/error')
+
+
 
 // Getting all Pagination and Query
 router.get('/', async (req, res, next) => {
@@ -23,7 +23,7 @@ router.get('/', async (req, res, next) => {
     })
     
 // Getting a single student
-router.get('/student/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try{
   const studentInfo = await student.findById(req.params.id)
    res.send(studentInfo)
@@ -32,7 +32,7 @@ router.get('/student/:id', async (req, res) => {
   }
  }) 
 
-// Creating one
+// Creating one student with upto 4 courses acceptance
 router.post('/', async (req, res, next) => {
   const newStudent = new student({
     firstName: req.body.firstName,
@@ -42,33 +42,28 @@ router.post('/', async (req, res, next) => {
     enrolledCourses: req.body.enrolledCourses
   })
   
+  const enrolledCourses = req.body.enrolledCourses;
+
+  if (!Array.isArray(enrolledCourses)) {
+    return res.status(400).send({ error: 'Enrolled courses must be an array' });
+  }
+
+  if (enrolledCourses.length > 4) {
+    return res.status(400).send({ error: 'Cannot enroll in more than 4 courses' });
+  }
+
   try {
     const freshstudent = await newStudent
     res.status(201).json(freshstudent)
     .save()
-    } catch (e) {
+    } catch (err) {
       next(err)
     }
 })
 
-//   try {
-//     const students = await newStudent.findById(req.params.id);
-//     student.courses.push(req.body.id);
-  
-//     if (student.courses.length > 4) {
-//       res.status(400).send({ error: 'A student can only enroll in up to 4 courses.' });
-//       return;
-//     }
-
-//     await student.save();
-//     res.send(students);
-//   } catch (e) {
-//     next(err)
-//   }
-// });
 
 // Updating One
-router.put('/student/:id', async (req, res, next) => {
+router.put('/:id', async (req, res, next) => {
   student.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(){
     student.findOne({_id: req.params.id}).then(function(student){
     res.send(`student with the ID ${student._id} has been Updated successfully.`)
@@ -80,10 +75,10 @@ router.put('/student/:id', async (req, res, next) => {
 })
 
 //Delete by ID Method
-router.delete('/student/:id', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     const studentId = await student.findByIdAndDelete(req.params.id)
-    res.send(`Student with the name ${studentId.firstName} ${studentId.lastName} has been deleted`)
+    res.send(`The student has been deleted has been successfully deleted!`)
   } catch (e) {
     next(err)
   }
