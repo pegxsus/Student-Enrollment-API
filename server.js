@@ -5,7 +5,7 @@ const app = express()
 const mongoose = require('mongoose')
 const studentRouter = require('./src/routes/students')
 const coursesRouter = require('./src/routes/courses')
-const connection = require('./src/controller/dbConnection')
+const connection = require('./controller/dbConnection')
 const db = mongoose.connection
 const PORT = 5000
 const dotenv = require("dotenv")
@@ -16,8 +16,8 @@ dotenv.config()
 db.on('error', (error) => console.error(error))
 
 app.use(express.json())
-
 app.use('/api/students', studentRouter)
+app.use('/api/student', studentRouter)
 app.use('/api/courses', coursesRouter)
 
 app.use('*', (req,res) => {
