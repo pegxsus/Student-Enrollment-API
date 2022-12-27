@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
   }
  }) 
 
-// Creating one student with upto 4 courses acceptance
+// Creating one with array 
 router.post('/', async (req, res, next) => {
   const newStudent = new student({
     firstName: req.body.firstName,
@@ -42,8 +42,23 @@ router.post('/', async (req, res, next) => {
     enrolledCourses: req.body.enrolledCourses
   })
   
-  const enrolledCourses = req.body.enrolledCourses;
+// Validate with Unique names
+  // const firstName = req.body.firstName;
+  // const lastName = req.body.lastName;
 
+  // if (!firstName || !lastName) {
+  //   return res.status(400).send({ error: 'First and last name are required' });
+  // }
+
+  // const uniqueFirstName = [...new Set(Array.from(firstName))];
+  // const uniqueLastName = [...new Set(Array.from(lastName))];
+
+  // if (uniqueFirstName.length < firstName.length || uniqueLastName.length < lastName.length) {
+  //   return res.status(400).send({ error: 'First and last name must be unique' });
+  // }
+
+// Validate courses 4 
+  const enrolledCourses = req.body.enrolledCourses;
   if (!Array.isArray(enrolledCourses)) {
     return res.status(400).send({ error: 'Enrolled courses must be an array' });
   }
