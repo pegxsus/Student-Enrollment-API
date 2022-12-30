@@ -50,9 +50,9 @@ router.post('/students', async (req, res, next) => {
       return;
     }
     if (student) {
-      res.send({ isUnique: false });
+      res.send({ error: 'The Student cannot be added since the student already exsists in the database' });
     } else {
-      res.send({ isUnique: true });
+      res.send({ success: 'The student details have been successfully added to the database'});
     }
 });
 
@@ -65,6 +65,19 @@ router.post('/students', async (req, res, next) => {
   if (enrolledCourses.length > 4) {
     return res.status(400).send({ error: 'Cannot enroll in more than 4 courses' });
   }
+
+  function isUnique(arr) {
+    return new Set(arr).size === arr.length;
+  }
+  
+  if (!isUnique(enrolledCourses)) {
+    return res.status(400).send({ error: 'Enrolled courses must be unique' });
+  }
+
+// Unique Courses Field
+// const { enrolledCourses } = req.body.enrolledCourses;
+
+
 
   try {
     const freshstudent = await newStudent.save()
