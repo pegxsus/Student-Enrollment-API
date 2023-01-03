@@ -1,5 +1,6 @@
 
 const express = require('express')
+const { set } = require('mongoose')
 const router = express.Router()
 const courses = require('../models/courses')
 
@@ -30,6 +31,13 @@ router.post('/', async (req, res) => {
     isElective: req.body.isElective,
     teacher: req.body.teacher
   })
+  //  Unique Courses Field
+  function isUnique(arr){
+    return new set(arr).size === arr.length;
+  }
+  if (!isUnique(title)) {
+    return res.status(400).send({ error: 'Entered course should be unique'})
+  }
   try {
     const freshCourses = await newCourses.save()
     res.status(201).json(freshCourses)
